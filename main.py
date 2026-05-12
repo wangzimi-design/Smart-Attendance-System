@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from database_logic import load_students, save_attendance
+from backend.database_logic import load_students, save_attendance
 from datetime import datetime
 
 def submit_attendance():
