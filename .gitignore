@@ -1,5 +1,4 @@
 __pycache__/
 *.pyc
 .DS_Store
-# 建议忽略本地数据库
 backend/data/*.db
