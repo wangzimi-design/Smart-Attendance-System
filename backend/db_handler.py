@@ -10,47 +10,77 @@ class DatabaseHandler:
 
     def _init_db(self):
         cursor = self.conn.cursor()
-        # 学生表：增加专业信息
-        cursor.execute('''CREATE TABLE IF NOT EXISTS students (id TEXT PRIMARY KEY, name TEXT, department TEXT)''')
-        # 考勤表：保持结构
-        cursor.execute('''CREATE TABLE IF NOT EXISTS attendance (date TEXT, student_id TEXT, status TEXT)''')
+        # 1. 学生库 (全局)
+        cursor.execute('''CREATE TABLE IF NOT EXISTS students (
+                            id TEXT PRIMARY KEY, 
+                            name TEXT, 
+                            department TEXT)''')
+        # 2. 课程库 (增加 professor 字段实现多租户隔离)
+        cursor.execute('''CREATE TABLE IF NOT EXISTS courses (
+                            id TEXT PRIMARY KEY, 
+                            name TEXT, 
+                            professor TEXT)''')
+        # 3. 考勤库 (复合主键防止重复)
+        cursor.execute('''CREATE TABLE IF NOT EXISTS attendance (
+                            date TEXT, 
+                            student_id TEXT, 
+                            course_id TEXT, 
+                            status TEXT,
+                            PRIMARY KEY (date, student_id, course_id))''')
+        # 4. 系统日志库
+        cursor.execute('''CREATE TABLE IF NOT EXISTS logs (
+                            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, 
+                            user TEXT, 
+                            action TEXT)''')
         self.conn.commit()
 
+    # --- 课程管理 (带教授身份验证) ---
+    def add_course(self, c_id, name, professor):
+        try:
+            self.conn.cursor().execute("INSERT INTO courses VALUES (?, ?, ?)", (c_id, name, professor))
+            self.conn.commit()
+            self.add_log(professor, f"Created course: {name} ({c_id})")
+            return True
+        except: return False
+
+    def delete_course(self, c_id, professor):
+        cursor = self.conn.cursor()
+        cursor.execute("DELETE FROM courses WHERE id = ? AND professor = ?", (c_id, professor))
+        cursor.execute("DELETE FROM attendance WHERE course_id = ?", (c_id,))
+        self.conn.commit()
+        self.add_log(professor, f"Deleted course: {c_id}")
+
+    def get_courses_by_professor(self, professor):
+        return pd.read_sql(f"SELECT * FROM courses WHERE professor = '{professor}'", self.conn)
+
+    # --- 学生管理 ---
     def add_student(self, s_id, name, dept="General"):
         try:
-            cursor = self.conn.cursor()
-            cursor.execute("INSERT INTO students VALUES (?, ?, ?)", (s_id, name, dept))
+            self.conn.cursor().execute("INSERT OR IGNORE INTO students VALUES (?, ?, ?)", (s_id, name, dept))
             self.conn.commit()
             return True
-        except sqlite3.IntegrityError:
-            return False
-
-    def delete_student(self, s_id):
-        cursor = self.conn.cursor()
-        cursor.execute("DELETE FROM students WHERE id = ?", (s_id,))
-        cursor.execute("DELETE FROM attendance WHERE student_id = ?", (s_id,))
-        self.conn.commit()
+        except: return False
 
     def get_all_students(self):
         return pd.read_sql("SELECT * FROM students", self.conn)
 
-    def save_attendance(self, date, s_id, status):
+    # --- 考勤核心逻辑 ---
+    def save_batch_attendance(self, attendance_list):
         cursor = self.conn.cursor()
-        # 如果同一天已存在记录则更新，否则插入 (Upsert 逻辑)
-        cursor.execute("""
-            INSERT INTO attendance (date, student_id, status) VALUES (?, ?, ?)
-            ON CONFLICT DO UPDATE SET status=excluded.status
-        """, (date, s_id, status)) # 注意：SQLite 3.24+ 支持此语法
-        # 如果版本低，简单处理：
-        cursor.execute("DELETE FROM attendance WHERE date=? AND student_id=?", (date, s_id))
-        cursor.execute("INSERT INTO attendance VALUES (?, ?, ?)", (date, s_id, status))
+        cursor.executemany("INSERT OR REPLACE INTO attendance VALUES (?, ?, ?, ?)", attendance_list)
         self.conn.commit()
 
-    def get_attendance_report(self):
-        query = """
-        SELECT a.date, s.id, s.name, s.department, a.status 
+    def get_attendance_report(self, course_id):
+        query = f"""
+        SELECT a.date, s.id as student_id, s.name as student_name, s.department, a.status 
         FROM attendance a 
         JOIN students s ON a.student_id = s.id
+        WHERE a.course_id = '{course_id}'
         ORDER BY a.date DESC
         """
         return pd.read_sql(query, self.conn)
+
+    # --- 日志系统 ---
+    def add_log(self, user, action):
+        self.conn.cursor().execute("INSERT INTO logs (user, action) VALUES (?, ?)", (user, action))
+        self.conn.commit()
