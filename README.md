@@ -1,25 +1,45 @@
-# SAAS Pro: Intelligent Attendance & Data Analysis Platform
-# 智能考勤与数据分析平台
+# 🚀 SAAS Pro: Intelligent Attendance & Data Analysis Platform
+### 智能考勤与数据分析平台
 
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)
+![Streamlit](https://img.shields.io/badge/Frontend-Streamlit-FF4B4B?logo=streamlit)
+![SQLite](https://img.shields.io/badge/Database-SQLite3-003B57?logo=sqlite)
 
-## Project Description / 项目描述
+---
 
-SAAS Pro is an industrial-grade, cloud-ready SaaS application developed entirely in Python. It manages the full data lifecycle—from multi-tenant secure login to deep behavioral analytics.
+## 📖 Project Description / 项目描述
 
-SAAS Pro 是一款完全基于 Python 开发的工业级云端 SaaS 应用。它管理从多租户安全登录、抗作弊签到机制到学生行为深度分析的完整数据生命周期。
+**SAAS Pro** is an industrial-grade, cloud-ready SaaS application developed entirely in Python. It manages the full data lifecycle—from multi-tenant secure login to deep behavioral analytics.
 
+**SAAS Pro** 是一款完全基于 Python 开发的工业级云端 SaaS 应用。它管理从多租户安全登录、抗作弊签到机制到学生行为深度分析的完整数据生命周期。
 
-## Key Features / 核心功能
+---
 
-- Multi-tenant Architecture: Secure portals for multiple professors.
-- Dynamic QR Code Engine: Real-time generated QR codes for check-ins.
-- 360° Analytics Dashboard: Interactive visualizations for trends.
-- Bulk Management: Excel/CSV engine for registration.
+## ✨ Key Features / 核心功能
 
+*   **👥 Multi-tenant Architecture**: Secure portals for multiple professors with data isolation.
+*   **📱 Dynamic QR Code Engine**: Real-time generated QR codes for student self-check-ins.
+*   **📊 360° Analytics Dashboard**: Interactive visualizations for attendance trends.
+*   **📂 Bulk Management**: High-performance Excel/CSV engine for student registration.
 
-## Installation Instructions / 安装指南
+---
 
-Note: Ensure you have Python 3.10+ installed.
+## 🛠 Technologies Used / 使用技术
+
+| Category | Technology |
+| :--- | :--- |
+| **Frontend** | Streamlit |
+| **Logic & Data** | Pandas, NumPy |
+| **Database** | SQLite3 |
+| **Visuals** | Plotly |
+
+---
+
+## 🚀 Installation Instructions / 安装指南
+
+> **Note**: Ensure you have **Python 3.10+** installed.
+
+### 1. Clone the repository / 克隆仓库
 
 
 ### 1. Clone the repository / 克隆仓库
