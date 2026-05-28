@@ -39,8 +39,6 @@
 
 > **Note**: Ensure you have **Python 3.10+** installed.
 
-### 1. Clone the repository / 克隆仓库
-
 
 ### 1. Clone the repository / 克隆仓库
 git clone <your-repository-url>
@@ -58,7 +56,7 @@ source venv/bin/activate
 ### 3. Install dependencies / 安装依赖
 pip install -r requirements.txt
 
-## Technical Implementation / 技术实现与课程关联
+## 🧩Technical Implementation / 技术实现与课程关联
 
 - **Chapter 10 & 11 (OOP)**: Using Classes for DatabaseHandler and AttendanceManager.
 - **Chapter 14 (Database)**: SQLite3 relational storage with JOIN queries.
@@ -66,29 +64,29 @@ pip install -r requirements.txt
 - **Data Analysis**: Pandas for weighted rate calculation and Plotly for rendering.
 
 
-## How to Run / 如何运行
+## 💻How to Run / 如何运行
 
 Execute the following command in your terminal:
 streamlit run app.py
 
-- Professor Access: http://localhost:8501 (Default PW: 123456)
-- Student Access: Access via QR code or append ?mode=student to the URL
+- 👨‍🏫Professor Access: http://localhost:8501 (Default PW: 123456)
+- 🎓Student Access: Access via QR code or append ?mode=student to the URL
 
 
-## Dataset Usage / 数据集说明
+## 📂Dataset Usage / 数据集说明
 
 - Internal Database: attendance.db is auto-initialized on first run.
 - External Input: Supports bulk-upload in the "Management" tab.
 - Requirements: Files must contain ID and Name columns.
 
 
-## Output Explanation / 输出说明
+## 📈Output Explanation / 输出说明
 
 - Visualizations: Daily Trend Charts, Activity Heatmaps, and Pie Charts.
 - Risk Alerts: Automated list of students with attendance < 75%.
 - Audit Logs: Timestamped records of all administrative actions.
 
-## Contributors / 贡献者
+## 👤Contributors / 贡献者
 - Ziming Wang
 
 
