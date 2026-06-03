@@ -69,7 +69,7 @@ pip install -r requirements.txt
 Execute the following command in your terminal:
 streamlit run app.py
 
-- 👨‍🏫Professor Access: http://localhost:8501 (Default PW: 123456)
+- 👨‍🏫Professor Access: http://localhost:8501 (Default Account: admin PW: 123456)
 - 🎓Student Access: Access via QR code or append ?mode=student to the URL
 
 
